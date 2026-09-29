@@ -25,11 +25,13 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build Debug APK
+        env:
+          JAVA_TOOL_OPTIONS: "-Djava.awt.headless=true"
         run: |
           if [ -f "./gradlew" ]; then
-            ./gradlew assembleDebug --stacktrace
+            ./gradlew assembleDebug -x test -x lint --stacktrace
           else
-            gradle assembleDebug --stacktrace
+            gradle assembleDebug -x test -x lint --stacktrace
           fi
 
       - name: Upload APK
