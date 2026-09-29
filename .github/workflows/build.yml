@@ -21,6 +21,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Generate Debug Keystore
+        run: |
+          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
@@ -29,9 +33,9 @@ jobs:
           JAVA_TOOL_OPTIONS: "-Djava.awt.headless=true"
         run: |
           if [ -f "./gradlew" ]; then
-            ./gradlew assembleDebug -x test -x lint --stacktrace
+            ./gradlew assembleDebug -x test -x lint --no-daemon --stacktrace
           else
-            gradle assembleDebug -x test -x lint --stacktrace
+            gradle assembleDebug -x test -x lint --no-daemon --stacktrace
           fi
 
       - name: Upload APK
